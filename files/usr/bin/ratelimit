@@ -12,6 +12,11 @@ import * as uloop from 'uloop';
 let defaults = {};
 let devices = {};
 
+function syslog(msg) {
+	system('logger -t ratelimit \'' + msg + '\'');
+	warn(msg + '\n');
+}
+
 function cmd(command, ignore_error) {
 //	if (ignore_error)
 //		command += "> /dev/null 2>&1";
@@ -339,6 +344,7 @@ function run_service() {
 		reload: {
 			call: function(req) {
 				reload_tc();
+				syslog("reloading rules");
 				return 0;
 			},
 			args: {
