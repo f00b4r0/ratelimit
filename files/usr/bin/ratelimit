@@ -12,6 +12,21 @@ import * as uloop from 'uloop';
 let defaults = {};
 let devices = {};
 
+function load_config() {
+	let uci = require('uci').cursor();
+
+	let uciload = uci.foreach('ratelimit', 'rate', (d) => {
+		let ssid = d.ssid;
+		let ingress = d.ingress;
+		let egress = d.egress;
+
+		if (!ssid || !ingress || !egress)
+			return;
+
+		defaults[ssid] = [ egress + "mbit", ingress + "mbit" ];
+	});
+}
+
 function syslog(msg) {
 	system('logger -t ratelimit \'' + msg + '\'');
 	warn(msg + '\n');
@@ -363,6 +378,7 @@ function run_service() {
 	}
 }
 
+load_config();
 uloop.init();
 run_service();
 uloop.done();
