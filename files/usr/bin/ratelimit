@@ -215,6 +215,16 @@ function set_client(device, client, data) {
 	return true;
 }
 
+// provide handler to reload all clients (e.g. after ifdown/up)
+function reload_tc() {
+	for (let name, device in devices) {
+		if (!ops.device.add(name))
+			continue;
+		for (let address, client in device.clients)
+			ops.client.set(device, client);
+	}
+}
+
 function run_service() {
 	let uctx = ubus.connect();
 
@@ -324,6 +334,14 @@ function run_service() {
 			},
 			args: {
 				device:"",
+			}
+		},
+		reload: {
+			call: function(req) {
+				reload_tc();
+				return 0;
+			},
+			args: {
 			}
 		}
 	});
