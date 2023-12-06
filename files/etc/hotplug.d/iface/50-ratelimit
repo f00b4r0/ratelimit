@@ -1,0 +1,3 @@
+/etc/init.d/ratelimit running || exit 0
+[ "$ACTION" = "ifup" ] || exit 0
+ubus call ratelimit reload
