@@ -12,6 +12,7 @@ define Package/ratelimit
   CATEGORY:=Network
   TITLE:=Wireless ratelimiting
   DEPENDS:=+tc +kmod-ifb
+  PKGARCH:=all
 endef
 
 define Package/ratelimit/description
