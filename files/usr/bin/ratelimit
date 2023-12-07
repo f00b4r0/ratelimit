@@ -89,10 +89,14 @@ function linux_client_del(device, client) {
 	let ifbdev = ifb_dev(device.name);
 	let id = client.id + 3;
 
-	macfilter_del(device.name, id);
-	qdisc_del_leaf(device.name, id);
-	macfilter_del(ifbdev, id);
-	qdisc_del_leaf(ifbdev, id);
+	if (client.data?.rate_egress) {
+		macfilter_del(device.name, id);
+		qdisc_del_leaf(device.name, id);
+	}
+	if (client.data?.rate_ingress) {
+		macfilter_del(ifbdev, id);
+		qdisc_del_leaf(ifbdev, id);
+	}
 }
 
 function linux_client_set(device, client) {
@@ -101,10 +105,15 @@ function linux_client_set(device, client) {
 
 	linux_client_del(device, client);
 
-	let ret = qdisc_add_leaf(device.name, id, `ceil ${client.data.rate_egress}`) &&
-		  macfilter_add(device.name, id, "dst", client.address) &&
-		  qdisc_add_leaf(ifbdev, id, `ceil ${client.data.rate_ingress}`) &&
-		  macfilter_add(ifbdev, id, "src", client.address);
+	let ret = true;
+	if (client.data?.rate_egress) {
+		ret &= qdisc_add_leaf(device.name, id, `ceil ${client.data.rate_egress}`);
+		ret &= macfilter_add(device.name, id, "dst", client.address);
+	}
+	if (client.data?.rate_ingress) {
+		ret &= qdisc_add_leaf(ifbdev, id, `ceil ${client.data.rate_ingress}`);
+		ret &= macfilter_add(ifbdev, id, "src", client.address);
+	}
 
 	if (!ret)
 		linux_client_del(device, client);
@@ -281,7 +290,7 @@ function run_service() {
 					r_i ??= def[1];
 				}
 
-				if (!req.args.device || !req.args.address || !r_i || !r_e)
+				if (!req.args.device || !req.args.address || (!r_i && !r_e))
 					return ubus.STATUS_INVALID_ARGUMENT;
 
 				let device = get_device(devices, req.args.device);
