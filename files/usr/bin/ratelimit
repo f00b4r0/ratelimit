@@ -282,6 +282,7 @@ function run_service() {
 			call: function(req) {
 				let r_i = req.args.rate_ingress ?? req.args.rate;
 				let r_e = req.args.rate_egress ?? req.args.rate;
+				let address = req.args.address;
 
 				if (req.args.defaults && defaults[req.args.defaults]) {
 					let def = defaults[req.args.defaults];
@@ -290,14 +291,14 @@ function run_service() {
 					r_i ??= def[1];
 				}
 
-				if (!req.args.device || !req.args.address || (!r_i && !r_e))
+				if (!req.args.device || !address || (!r_i && !r_e))
 					return ubus.STATUS_INVALID_ARGUMENT;
 
 				let device = get_device(devices, req.args.device);
 				if (!device)
 					return ubus.STATUS_INVALID_ARGUMENT;
 
-				let client = get_client(device, req.args.address);
+				let client = get_client(device, address);
 				if (!client)
 					return ubus.STATUS_INVALID_ARGUMENT;
 
@@ -308,6 +309,13 @@ function run_service() {
 
 				if (!set_client(device, client, data))
 					return ubus.STATUS_UNKNOWN_ERROR;
+
+				let log = `setting ${address}`;
+				if (r_e)
+					log += ` e:${r_e}`;
+				if (r_i)
+					log += ` i:${r_i}`;
+				syslog(log);
 
 				return 0;
 			},
@@ -322,7 +330,9 @@ function run_service() {
 		},
 		client_delete: {
 			call: function(req) {
-				if (!req.args.address)
+				let address = req.args.address;
+
+				if (!address)
 					return ubus.STATUS_INVALID_ARGUMENT;
 
 				if (req.args.device) {
@@ -330,15 +340,17 @@ function run_service() {
 					if (!device)
 						return ubus.STATUS_NOT_FOUND;
 
-					if (!del_client(device, req.args.address))
+					if (!del_client(device, address))
 						return ubus.STATUS_NOT_FOUND;
 				} else {
 					for (let dev in devices) {
 						let device = devices[dev];
 
-						del_client(device, req.args.address);
+						del_client(device, address);
 					}
 				}
+
+				syslog(`clearing ${address}`);
 
 				return 0;
 			},
