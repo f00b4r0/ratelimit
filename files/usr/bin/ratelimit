@@ -16,14 +16,14 @@ function load_config() {
 	let uci = require('uci').cursor();
 
 	let uciload = uci.foreach('ratelimit', 'rate', (d) => {
-		let ssid = d.ssid;
+		let name = d.name;
 		let ingress = d.ingress;
 		let egress = d.egress;
 
-		if (!ssid || !ingress || !egress)
+		if (!name || (!ingress && !egress))
 			return;
 
-		defaults[ssid] = [ egress + "mbit", ingress + "mbit" ];
+		defaults[name] = [ egress, ingress ];
 	});
 }
 
@@ -264,7 +264,7 @@ function run_service() {
 				let r_e = req.args.rate_egress ?? req.args.rate;
 				let name = req.args.name;
 
-				if (!name || !r_i || !r_e)
+				if (!name || (!r_i && !r_e))
 					return ubus.STATUS_INVALID_ARGUMENT;
 
 				defaults[name] = [ r_e, r_i ];

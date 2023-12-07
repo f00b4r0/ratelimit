@@ -1,3 +1,6 @@
-#config rate uCentral
-#	option egress 10
-#	option ingress 20
+# define optional defaults
+
+#config rate
+#	option name 'mydefaults'	# identifier for these defaults, used for "defaults" ubus parameter
+#	option egress '10000000'	# use a value compatible with tc htb rate (numerical or suffixed)
+#	option ingress '20mbit'		# use a value compatible with tc htb rate (numerical or suffixed)

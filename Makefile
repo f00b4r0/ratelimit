@@ -10,13 +10,14 @@ include $(INCLUDE_DIR)/package.mk
 define Package/ratelimit
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Wireless ratelimiting
+  TITLE:=client devices ratelimiting daemon
   DEPENDS:=+tc +kmod-ifb
   PKGARCH:=all
 endef
 
 define Package/ratelimit/description
-	Allow Wireless client rate limiting
+  This daemon provides a stateful interface to the HTB traffic shaper,
+  enabling per-client bandwidth limits assignment.
 endef
 
 define Build/Prepare
