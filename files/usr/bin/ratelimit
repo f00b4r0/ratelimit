@@ -1,4 +1,4 @@
-#!/usr/bin/env ucode
+#!/usr/bin/ucode
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2021-2023 John Crispin <john@phrozen.org>
 // SPDX-FileCopyrightText: 2023 Thibaut Varène <hacks@slashdirt.org>
