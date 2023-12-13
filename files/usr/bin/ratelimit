@@ -202,6 +202,9 @@ function del_client(device, address) {
 	device.client_order[client.id] = null;
 
 	ops.client.remove(device, client);
+
+	syslog(`clearing ${address}`);
+
 	return true;
 }
 
@@ -240,6 +243,13 @@ function set_client(device, client, data) {
 		del_client(device, client.address);
 		return false;
 	}
+
+	let log = `setting ${client.address}`;
+	if (data.rate_egress)
+		log += ` e:${data.rate_egress}`;
+	if (data.rate_ingress)
+		log += ` i:${data.rate_ingress}`;
+	syslog(log);
 
 	return true;
 }
@@ -310,13 +320,6 @@ function run_service() {
 				if (!set_client(device, client, data))
 					return ubus.STATUS_UNKNOWN_ERROR;
 
-				let log = `setting ${address}`;
-				if (r_e)
-					log += ` e:${r_e}`;
-				if (r_i)
-					log += ` i:${r_i}`;
-				syslog(log);
-
 				return 0;
 			},
 			args: {
@@ -349,8 +352,6 @@ function run_service() {
 						del_client(device, address);
 					}
 				}
-
-				syslog(`clearing ${address}`);
 
 				return 0;
 			},
