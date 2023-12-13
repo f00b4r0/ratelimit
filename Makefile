@@ -20,6 +20,10 @@ define Package/ratelimit/description
   enabling per-client bandwidth limits assignment.
 endef
 
+define Package/ratelimit/conffiles
+/etc/config/ratelimit
+endef
+
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
