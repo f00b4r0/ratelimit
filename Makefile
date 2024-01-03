@@ -11,7 +11,7 @@ define Package/ratelimit
   SECTION:=net
   CATEGORY:=Network
   TITLE:=client devices ratelimiting daemon
-  DEPENDS:=+tc +kmod-ifb
+  DEPENDS:=+tc +kmod-ifb +ucode-mod-log
   PKGARCH:=all
 endef
 
