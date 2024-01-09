@@ -16,3 +16,6 @@ start_service() {
 	procd_close_instance
 }
 
+reload_service() {
+	ubus call ratelimit reload
+}
