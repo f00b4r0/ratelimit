@@ -181,6 +181,7 @@ function del_device(name) {
 		return;
 	ops.device.remove(name);
 	delete devices[name];
+	INFO(`clearing device ${name}`);
 }
 
 function get_free_idx(list) {
