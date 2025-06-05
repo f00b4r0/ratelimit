@@ -287,6 +287,13 @@ function run_service() {
 
 				return 0;
 			},
+			/*
+			 Set or update defaults.
+			 @param name: REQUIRED: Defaults name
+			 @param rate: OPTIONAL: apply HTB-compatible value (numeric or suffixed) to both ingress and egress
+			 @param rate_ingress: OPTIONAL: apply HTB-compatible value (numeric or suffixed) to ingress
+			 @param rate_egress: OPTIONAL: apply HTB-compatible value (numeric or suffixed) to egress
+			 */
 			args: {
 				name:"",
 				rate:"",
@@ -328,10 +335,19 @@ function run_service() {
 
 				return 0;
 			},
+			/*
+			 Set or update client limits.
+			 @param device: REQUIRED: network device name
+			 @param address: REQUIRED: client MAC address
+			 @param defaults: OPTIONAL: apply existing defaults if provided (overrides rate* arguments)
+			 @param rate: OPTIONAL: apply HTB-compatible value (numeric or suffixed) to both ingress and egress
+			 @param rate_ingress: OPTIONAL: apply HTB-compatible value (numeric or suffixed) to ingress
+			 @param rate_egress: OPTIONAL: apply HTB-compatible value (numeric or suffixed) to egress
+			 */
 			args: {
 				device:"",
-				defaults:"",
 				address:"",
+				defaults:"",
 				rate:"",
 				rate_ingress:"",
 				rate_egress:"",
@@ -361,6 +377,11 @@ function run_service() {
 
 				return 0;
 			},
+			/*
+			 Clear client limits.
+			 @param device: REQUIRED: network device name
+			 @param address: REQUIRED: client MAC address
+			 */
 			args: {
 				device:"",
 				address:"",
@@ -380,6 +401,10 @@ function run_service() {
 
 				return 0;
 			},
+			/*
+			 Clear device limits.
+			 @param device: REQUIRED: network device name
+			 */
 			args: {
 				device:"",
 			}
