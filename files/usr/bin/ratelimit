@@ -386,6 +386,13 @@ function run_service() {
 			},
 			args: {
 			}
+		},
+		dump: {
+			call: function(req) {
+				return { defaults, devices };
+			},
+			args: {
+			}
 		}
 	});
 
