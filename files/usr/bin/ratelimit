@@ -8,7 +8,7 @@
 import { basename, popen } from 'fs';
 import * as ubus from 'ubus';
 import * as uloop from 'uloop';
-import { ulog_open, ULOG_SYSLOG, LOG_DAEMON, NOTE, INFO } from 'log';
+import { ulog_open, ulog, ULOG_SYSLOG, LOG_DAEMON, LOG_DEBUG, ERR, NOTE, INFO } from 'log';
 
 let defaults = {};
 let devices = {};
@@ -37,7 +37,7 @@ function load_config() {
 function cmd(command, ignore_error) {
 //	if (ignore_error)
 //		command += "> /dev/null 2>&1";
-	warn(`> ${command}\n`);
+	ulog(LOG_DEBUG, `> ${command}`);
 	let rc = system(command);
 	return ignore_error || rc == 0;
 }
@@ -117,8 +117,10 @@ function linux_client_set(device, client) {
 		ret &= macfilter_add(ifbdev, id, "src", client.address);
 	}
 
-	if (!ret)
+	if (!ret) {
+		ERR(`failed to set limits on client ${client.address}`);
 		linux_client_del(device, client);
+	}
 
 	return ret;
 }
@@ -137,6 +139,7 @@ let ops = {
 				  qdisc_add(ifbdev);
 
 			if (!ret) {
+				ERR(`failed to setup device ${name}`);
 				qdisc_del(name);
 				ifb_del(name, ifbdev);
 			}
