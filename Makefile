@@ -3,7 +3,8 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=ratelimit
 PKG_RELEASE:=1
 
-PKG_MAINTAINER:=John Crispin <john@phrozen.org>
+PKG_LICENSE:=MIT
+PKG_MAINTAINER:=Thibaut VARÈNE <hacks@slashdirt.org>
 
 include $(INCLUDE_DIR)/package.mk
 
