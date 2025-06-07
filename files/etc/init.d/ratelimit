@@ -3,7 +3,7 @@
 START=80
 
 USE_PROCD=1
-PROG=/usr/bin/ratelimit
+PROG=/usr/sbin/ratelimit
 
 service_triggers() {
 	procd_add_reload_trigger "ratelimit"
