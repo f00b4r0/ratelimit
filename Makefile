@@ -25,17 +25,17 @@ define Package/ratelimit/conffiles
 /etc/config/ratelimit
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
+define Build/Configure
 endef
 
-define Build/Compile/Default
-
+define Build/Compile
 endef
-Build/Compile = $(Build/Compile/Default)
 
 define Package/ratelimit/install
-	$(CP) ./files/* $(1)
+	$(INSTALL_DIR) $(1)/usr/sbin $(1)/etc/hotplug.d/iface $(1)/etc/init.d $(1)/etc/config
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/files/etc/hotplug.d/iface/50-ratelimit $(1)/etc/hotplug.d/iface/50-ratelimit
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/files/etc/config/ratelimit $(1)/etc/config/ratelimit
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/etc/init.d/ratelimit $(1)/etc/init.d/ratelimit
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/usr/sbin/ratelimit $(1)/usr/sbin/ratelimit
 endef
-
 $(eval $(call BuildPackage,ratelimit))
