@@ -39,7 +39,7 @@ function load_config() {
 function cmd(command, ignore_error) {
 //	if (ignore_error)
 //		command += "> /dev/null 2>&1";
-	ulog(LOG_DEBUG, `> ${command}`);
+//	ulog(LOG_DEBUG, `> ${command}`);
 	let rc = system(command);
 	return ignore_error || rc == 0;
 }
