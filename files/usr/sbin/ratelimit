@@ -10,6 +10,8 @@ import * as ubus from 'ubus';
 import * as uloop from 'uloop';
 import { ulog_open, ulog, ULOG_SYSLOG, LOG_DAEMON, LOG_DEBUG, ERR, NOTE, INFO } from 'log';
 
+const filtprio = 512;
+
 let defaults = {};
 let devices = {};
 
@@ -70,11 +72,11 @@ function ifb_add(iface, ifbdev) {
 	return cmd(`ip link add ${ifbdev} type ifb`) &&
 	       cmd(`ip link set ${ifbdev} up`) &&
 	       cmd(`tc qdisc add dev ${iface} clsact`, true) &&
-	       cmd(`tc filter add dev ${iface} ingress protocol all prio 512 matchall action mirred egress redirect dev ${ifbdev}`);
+	       cmd(`tc filter add dev ${iface} ingress protocol all prio ${filtprio} matchall action mirred egress redirect dev ${ifbdev}`);
 }
 
 function ifb_del(iface, ifbdev) {
-	cmd(`tc filter del dev ${iface} ingress protocol all prio 512`);
+	cmd(`tc filter del dev ${iface} ingress protocol all prio ${filtprio}`);
 	cmd(`ip link set ${ifbdev} down`, true);
 	cmd(`ip link del ${ifbdev}`, true);
 }
